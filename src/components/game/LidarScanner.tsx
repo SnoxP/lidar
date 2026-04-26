@@ -77,6 +77,12 @@ export function LidarScanner({ isMonsterHitCallback }: { isMonsterHitCallback: (
     // Process new rays
     if (isScanning) {
       const numRays = 150; // Rays per frame
+      
+      const worldQuat = new THREE.Quaternion();
+      camera.getWorldQuaternion(worldQuat);
+      const worldPos = new THREE.Vector3();
+      camera.getWorldPosition(worldPos);
+
       for (let i = 0; i < numRays; i++) {
         // Random conical spread
         const angle = Math.random() * Math.PI * 2;
@@ -85,17 +91,17 @@ export function LidarScanner({ isMonsterHitCallback }: { isMonsterHitCallback: (
         const spreadY = Math.sin(angle) * Math.sqrt(radius) * 0.55;
         
         const rayDir = new THREE.Vector3(spreadX, spreadY, -1).normalize();
-        rayDir.applyQuaternion(camera.quaternion);
+        rayDir.applyQuaternion(worldQuat);
         
-        // Offset ray origin slightly forward so it doesn't hit player's own collider instantly
-        const rayOrigin = camera.position.clone().add(rayDir.clone().multiplyScalar(0.6));
+        // Ray origin at the camera's exact world position
+        const rayOrigin = worldPos.clone();
         
         const ray = new rapier.Ray(rayOrigin, rayDir);
-        // solid = true so we hit walls
-        const hit = world.castRay(ray, 50.0, true);
+        // solid = false ensures we ignore the player's own capsule that we start inside!
+        const hit = world.castRay(ray, 50.0, false);
         
         if (hit && hit.collider) {
-          const hitPoint = ray.pointAt(hit.toi);
+          const hitPoint = rayOrigin.clone().add(rayDir.clone().multiplyScalar(hit.toi));
           const idx = currentIdx.current;
           
           positions[idx * 3] = hitPoint.x;
