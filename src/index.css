@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  
+  --color-lidar-base: #00ffaa;
+  --color-lidar-dim: rgba(0, 255, 170, 0.2);
+}
+
+body {
+  @apply bg-neutral-950 text-neutral-300 font-mono;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar for immersive feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #262626;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00ffaa;
+}
+
+::selection {
+  background-color: rgba(0, 255, 170, 0.3);
+  color: #fff;
+}
